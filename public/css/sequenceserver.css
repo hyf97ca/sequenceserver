@@ -177,7 +177,14 @@ a.disabled:hover,
  * Use monospace font.
  */
 .text-monospace {
-  font-family: monospace;
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    Courier,
+    monospace;
+  font-size: 12px;
 }
 
 /**
@@ -235,6 +242,8 @@ a.disabled:hover,
   padding: 0;
   border-radius: 0;
   background-color: inherit;
+  white-space: pre-wrap;
+  word-break: keep-all;
 }
 
 /***************************
@@ -306,6 +315,10 @@ label[for="advanced"] {
 input[name="advanced"] {
   border-top-left-radius: 4px !important;
   border-bottom-left-radius: 4px !important;
+}
+
+input[type=checkbox] {
+  vertical-align: top;
 }
 
 #method {
@@ -410,12 +423,9 @@ input[name="advanced"] {
 .hsp:last-child {
   padding-bottom: 0;
 }
-.hsp pre {
-  font-size: 12px;
-}
+
 .hsp-stats {
-  word-break: normal;
-  white-space: pre-wrap;
+  font-size: 12px;
 }
 .hsp .hsp-lines {
   margin-top: 5px;
@@ -429,6 +439,7 @@ input[name="advanced"] {
 .hit-links * {
   padding-left: 3px;
   letter-spacing: 1px;
+  vertical-align: baseline;
 }
 .btn-link {
   border: none;
