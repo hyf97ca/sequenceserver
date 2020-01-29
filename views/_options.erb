@@ -7,30 +7,54 @@
 <h5>General Search Options</h5>
 <ul class="list-unstyled">
   <li>
-<pre><%= ERB::Util.h %q|-evalue <Real>
+<pre><%= ERB::Util.h %q|-evalue <Real> 
   Expectation value (E) threshold for saving hits
-  Default = '10'| %></pre>
+  Default = '10'| %>
+  <input type="text" id="evalue" value="10">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-evalue', document.getElementById('evalue').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-word_size <Integer, >=2>
-  Word size for wordfinder algorithm| %></pre>
+  Word size for wordfinder algorithm| %>
+  <input type="text" id="word_size" value="3">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-word_size', document.getElementById('word_size').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-gapopen <Integer>
-  Cost to open a gap| %></pre>
+  Cost to open a gap| %>
+  <input type="text" id="gapopen" value="11">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-gapopen', document.getElementById('gapopen').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-gapextend <Integer>
-  Cost to extend a gap| %></pre>
+  Cost to extend a gap| %>
+  <input type="text" id="gapextend" value="1">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-gapextend', document.getElementById('gapextend').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-matrix <String>
-  Scoring matrix name (normally BLOSUM62)| %></pre>
+  Scoring matrix name (normally BLOSUM62)| %>
+  <input type="text" id="matrix" value="BLOSUM62">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-matrix', document.getElementById('matrix').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-threshold <Real, >=0>
   Minimum word score such that the word is added to the BLAST lookup
-  table| %></pre>
+  table| %>
+  <input type="text" id="threshold" value="1">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-threshold', document.getElementById('threshold').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-comp_based_stats <String>
@@ -45,17 +69,29 @@
       21:902-911, 2005, unconditionally
   For programs other than tblastn, must either be absent or be D, F
   or 0
-  Default = `2'| %></pre>
+  Default = `2'| %>
+  <input type="text" id="comp_based_stats" value>
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-comp_based_stats', document.getElementById('comp_based_stats').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-num_descriptions <Integer, >=0>
   Number of database sequences to show one-line descriptions for
-  Default = `500'| %></pre>
+  Default = `500'| %>
+  <input type="text" id="num_descriptions" value="500">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-num_descriptions', document.getElementById('num_descriptions').value)"
+  >Submit</button></pre>
   </li>
   <li>
 <pre><%= ERB::Util.h %q| -num_alignments <Integer, >=0>
   Number of database sequences to show alignments for
-  Default = `250'| %></pre>
+  Default = `250'| %>
+  <input type="text" id="num_alignments" value="250">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-num_alignments', document.getElementById('num_alignments').value)"
+  >Submit</button></pre>
   </li>
 </ul>
 
@@ -130,6 +166,10 @@
   </li>
   <li>
 <pre><%= ERB::Util.h %q|-max_target_seqs <Integer, >=1>
-  Maximum number of aligned sequences to keep| %></pre>
+  Maximum number of aligned sequences to keep| %>
+  <input type="text" id="max_target_seqs" value="100">
+  <button onclick=
+  "window.sequenceserver.refs.form.refs.opts.setOption('-max_target_seqs', document.getElementById('max_target_seqs').value)"
+  >Submit</button></pre>
   </li>
 </ul>

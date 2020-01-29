@@ -286,12 +286,29 @@ var Form = React.createClass({
 
     handleAlgoChanged: function (algo) {
       if (this.state.preDefinedOpts.hasOwnProperty(algo)) {
+      var tokens = this.refs.opts.state.preOpts.split(' ');
+      //this.state.preDefinedOpts[algo] is a list of strings where each string contains '-[option] [param]'
+      this.state.preDefinedOpts[algo].forEach(function(item, index){
+            //select only the option portion of item
+            var optionIndex = tokens.indexOf(item.split(' ')[0]);
+            //look for the option itself to see if it exists in tokens
+            if (optionIndex >= 0 && optionIndex + 1 < tokens.length) {
+                //do nothing, option already is present so don't overwrite
+            }
+            else 
+            {
+                var items = item.split(' ');
+                //shove entire option including param into the beginning of the options input  
+                if (items.length > 1)              
+                    tokens.splice(0, 0, items[0], items[1]);
+            }
+      });
         this.refs.opts.setState({
-          preOpts: this.state.preDefinedOpts[algo].join(" ")
+          preOpts: tokens.join(" ")
         });
       }
       else {
-        this.refs.opts.setState({preOpts: ""});
+        //this.refs.opts.setState({preOpts: ""});
       }
     },
 
@@ -795,6 +812,32 @@ var Options = React.createClass({
                 </div>
             </div>
         );
+    },
+
+    /**
+     * Yi Fei Huang mod for injecting options
+     * option: valid option as string (eg. "evalue")
+     * value: valid value as string (eg. "5")
+     * 
+     * future expansion: add a function pointer for validation of value
+     */
+
+    setOption: function (option, value) 
+    {
+        var tokens = this.state.preOpts.split(' ');
+        var optionIndex = tokens.indexOf(option);
+        if (optionIndex >= 0 && optionIndex + 1 < tokens.length) {
+            var valueIndex = optionIndex + 1;
+            tokens.splice(valueIndex, 1, value);
+        }
+        else 
+        {            
+            tokens.push(option);
+            tokens.push(value);
+        }
+        this.setState({
+            preOpts: tokens.join(' ')
+          });
     }
 });
 
@@ -975,4 +1018,5 @@ var SearchButton = React.createClass({
     }
 });
 
-React.render(<Page/>, document.getElementById('view'));
+//all access from vanilla JS
+React.render(<Page ref={(sequenceserver) => {window.sequenceserver = sequenceserver}} />, document.getElementById('view'));
