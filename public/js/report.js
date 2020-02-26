@@ -30,6 +30,46 @@ var downloadFASTA = function (sequence_ids, database_ids) {
     }
 };
 
+var getRepresentative = function (effector_id) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type:'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            url: encodeURI(`0.0.0.0:3000/effectors/id=eq.${effector_id}&select=representative`),
+            dataType: 'json',
+            success:function(data) {
+                resolve(data['result']);
+            },
+            contentType: false,//'text/plain',
+            fail:function() {
+                reject("FAILED AJAX");
+            }
+        });
+    });  
+}
+
+var getRepresented = function (representative_id) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type:'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            url: encodeURI(`0.0.0.0:3000/effectors/representative=eq.${representative_id}&select=id`),
+            dataType: 'json',
+            success:function(data) {
+                resolve(data['result']);
+            },
+            contentType: false,//'text/plain',
+            fail:function() {
+                reject("FAILED AJAX");
+            }
+        });
+    });  
+}
+
 /**
  * Base component of report page. This component is later rendered into page's
  * '#view' element.
@@ -716,7 +756,12 @@ var Hit = React.createClass({
                 <span> | </span>
                 <button className='btn btn-link download-aln'
                     onClick={this.downloadAlignment}>
-                    <i className="fa fa-download"></i> Alignment
+                    <i className="fa fa-download"></i> Alignmenthmm
+                </button>
+                <span> | </span>
+                <button className='btn btn-link representative'
+                    onClick={getRepresented(getRepresentative("PgyICMP9589_AvrB1b_1"))}>
+                    <i className="fa fa-representative"></i> REPRESENTATIVE
                 </button>
                 {
                     _.map(this.props.hit.links, _.bind(function (link) {
@@ -1120,4 +1165,7 @@ var SideBar = React.createClass({
     },
 });
 
-React.render(<Page/>, document.getElementById('view'));
+//React.render(<Page/>, document.getElementById('view'));
+
+//all access from vanilla JS
+React.render(<Page ref={(sequenceserver) => {window.sequenceserver = sequenceserver}} />, document.getElementById('view'));
