@@ -24,34 +24,15 @@ module SequenceServer
     class Report < Report
       def initialize(job)
         super do
-          @querydb = job.databases
           @queries = []
         end
       end
 
-      # Attributes parsed out from XML output.
-      attr_reader :program, :program_version, :params, :stats, :queries
+      # Attributes parsed out from BLAST output.
+      attr_reader :program, :program_version, :stats, :queries
 
-      # This is obtained from the job object.
-      attr_reader :querydb
-
-      # Returns database type (nucleotide or protein) used for running BLAST
-      # search. If we ran the BLAST search, this information is available
-      # from Job#databases. For imported XML, this is inferred from
-      # Report#program (i.e., the BLAST algorithm)
-      def dbtype
-        return @dbtype if @dbtype
-        @dbtype = if @querydb.empty?
-                    case program
-                    when /blastn|tblastn|tblastx/
-                      'nucleotide'
-                    when /blastp|blastx/
-                      'protein'
-                    end
-                  else
-                    @querydb.first.type
-                  end
-      end
+      # Attributes parsed from job metadata and BLAST output.
+      attr_reader :querydb, :dbtype, :params
 
       def to_json
         [:querydb, :program, :program_version, :params, :stats,
@@ -68,6 +49,8 @@ module SequenceServer
       # Generate report.
       def generate
         job.raise!
+        xml_ir = nil
+        tsv_ir = nil
         if job.imported_xml_file
           xml_ir = parse_xml File.read(job.imported_xml_file)
           tsv_ir = Hash.new do |h1,k1|
@@ -75,18 +58,15 @@ module SequenceServer
               h2[k2]=['','',[]]
             end
           end
-          extract_program_info xml_ir
-          extract_params xml_ir
-          extract_stats xml_ir
-          extract_queries xml_ir, tsv_ir
         else
           xml_ir = parse_xml File.read(Formatter.run(job, 'xml').file)
-          tsv_ir = parse_tsv File.read(Formatter.run(job, 'custom_tsv').file )
-          extract_program_info xml_ir
-          extract_params xml_ir
-          extract_stats xml_ir
-          extract_queries xml_ir, tsv_ir
+          tsv_ir = parse_tsv File.read(Formatter.run(job, 'custom_tsv').file)
         end
+        extract_program_info xml_ir
+        extract_db_info xml_ir
+        extract_params xml_ir
+        extract_stats xml_ir
+        extract_queries xml_ir, tsv_ir
       end
 
       # Make program name and program name + version available via `program`
@@ -96,6 +76,20 @@ module SequenceServer
         @program_version = ir[1]
       end
 
+      # Get database information (title and type) from job yaml or from XML.
+      # Sets `querydb` and `dbtype` attributes.
+      def extract_db_info(ir)
+        if job.databases.empty?
+          @querydb = ir[3].split.map do |path|
+            { title: File.basename(path) }
+          end
+          @dbtype = dbtype_from_program
+        else
+          @querydb = job.databases
+          @dbtype = @querydb.first.type
+        end
+      end
+
       # Make search params available via `params` attribute.
       #
       # Search params tweak the results. Like evalue cutoff or penalty to open
@@ -103,11 +97,20 @@ module SequenceServer
       # matrix, evalue, gapopen, gapextend, and filters are available from XML
       # output.
       def extract_params(ir)
+        # Parse/get params from the job first.
+        job_params = parse_advanced(job.advanced)
+        # Old jobs from beta releases may not have the advanced key but they
+        # will have the deprecated advanced_params key.
+        job_params.update(job.advanced_params) if job.advanced_params
+
+        # Parse params from BLAST XML.
         @params = Hash[
           *ir[7].first.map { |k, v| [k.gsub('Parameters_', ''), v] }.flatten
         ]
         @params['evalue'] = @params.delete('expect')
-        @params = job.advanced_params.merge(@params)
+
+        # Merge into job_params.
+        @params = job_params.merge(@params)
       end
 
       # Make search stats available via `stats` attribute.
@@ -231,6 +234,36 @@ module SequenceServer
           (ir[row[0]][row[1]] ||= [row[2], row[3], []])[2] << row[4]
         end
         ir
+      end
+
+      # Parse BLAST CLI string from job.advanced.
+      def parse_advanced(param_line)
+        param_list = (param_line || '').split(' ')
+        res = {}
+
+        param_list.each_with_index do |word, i|
+          nxt = param_list[i + 1]
+          if word.start_with? '-'
+            word.sub!('-', '')
+            unless nxt.nil? || nxt.start_with?('-')
+              res[word] = nxt
+            else
+              res[word] = 'True'
+            end
+          end
+        end
+        res
+      end
+
+      # Returns database type (nucleotide or protein) inferred from
+      # Report#program (i.e., the BLAST algorithm)
+      def dbtype_from_program
+        case program
+        when /blastn|tblastn|tblastx/
+          'nucleotide'
+        when /blastp|blastx/
+          'protein'
+        end
       end
     end
   end
