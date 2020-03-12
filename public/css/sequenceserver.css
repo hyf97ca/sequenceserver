@@ -29,9 +29,10 @@ a {
   color: #1b557a;
 }
 
-p {
-  margin: 0;
+label:hover {
+  color: #c74f14;
 }
+
 /**
  * Disable resize grabber on textarea.
  */
@@ -114,7 +115,7 @@ a.disabled:hover,
 /* Hit header styling */
 .section-header {
   border-bottom: 1px solid  #c74f14;
-  padding-bottom: 3px;
+  padding-bottom: 1px;
   padding-left: 1px;
   display: table;
   width: 100%;
@@ -136,7 +137,7 @@ a.disabled:hover,
   font-weight: bold;
 }
 .section-content {
-  padding: 5px 0 0 0px;
+  padding: 0;
 }
 /**
  * Take out border, cut down margin and padding, and remove background color
@@ -180,12 +181,12 @@ a.disabled:hover,
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td,
 .table>tbody>tr>td, .table>tfoot>tr>td {
   border-top: none;
-  padding-left: 0;
   font-weight: normal;
-  padding: 4px;
+  padding: 0 0 0 4px;
 }
 .table>thead>tr>th {
-  border-bottom: 1px solid #c74f14;
+  border-bottom: none;
+  color: #5f5f5f;
 }
 
 /**
@@ -272,13 +273,14 @@ a.disabled:hover,
  * Use with .label class to use the foreground color defined by parent element.
  */
 .label-reset {
-  color: #1b557a;
+  color: inherit;
   line-height: inherit;
   font-weight: normal;
-  font-size: 14px;
-  display: inline;
+  font-size: inherit;
 }
-
+.pos-label {
+  padding: 0 0 0 0.6em;
+}
 /**
  * Reset Bootstrap's CSS for pre tags.
  */
@@ -421,8 +423,11 @@ input[type=checkbox] {
   /* To line up with the sidebar on the left */
   margin: 10px 0;
 }
+.overview p {
+  margin: 0;
+}
 .resultn {
-  margin-top: 5px;
+  margin-top: 10px;
 }
 .resultn h3 small {
   font-size: inherit;
@@ -437,12 +442,6 @@ input[type=checkbox] {
   padding-bottom: 0;
 }
 
-.tabular-view {
-  margin-top: 10px;
-  margin-left: 6px;
-  margin-bottom: 10px;
-}
-
 .hit {
   padding-top: 8px;
   margin-top: 2px;
@@ -455,29 +454,18 @@ input[type=checkbox] {
 }
 .hit h4 span {
   cursor: text;
-  font-weight: bold;
-  color: #1b557a;
   padding-left: 1px;
 }
 .hit h4 small {
   font-size: inherit;
 }
-.hit > p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
 
 .hsp {
-  padding-bottom: 8px;
-  padding-left: 10px;
+  padding: 4px 0 0 2px;
 }
-.hsp:last-child {
-  padding-bottom: 10px;
-}
-
 .hsp-stats {
   font-size: 12px;
-  color:#808080;
+  color:#5f5f5f;
 }
 .hsp-lines {
   margin-top: 5px;
@@ -485,19 +473,12 @@ input[type=checkbox] {
   letter-spacing: 1.2px;
 }
 .hsp-coords {
-  color: #808080;
+  color: #5f5f5f;
 }
 
-.hit-links * {
-  padding-left: 1px;
-  letter-spacing: 1px;
-  vertical-align: middle !important;
-
-}
 .btn-link {
   border: none;
   padding: 0px;
-  vertical-align: text-bottom;
   color: #1b557a;
 }
 
@@ -550,9 +531,7 @@ input[type=checkbox] {
 /* CSS class for vertical line separating the hit links */
 .line {
   color: #c74f14;
-}
-.fa {
-  vertical-align: middle;
+  margin: 0 5px 0 5px;
 }
 /* override bootstrap focus color in the text field of the search page */
 .form-control:focus {

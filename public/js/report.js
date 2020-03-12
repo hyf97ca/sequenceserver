@@ -222,7 +222,7 @@ var Report = React.createClass({
                     results.push(
                         <HSP key={'Query_'+query.number+'_Hit_'+hit.number+'_HSP_'+hsp.number}
                             query={query} hit={hit} hsp={hsp} algorithm={this.state.program}
-                            {... this.props} />
+                            showHSPCrumbs={hit.hsps.length > 1} {... this.props} />
                     );
                     numHSPsProcessed++;
                     if (numHSPsProcessed == this.maxHSPs) break;
@@ -316,17 +316,17 @@ var Report = React.createClass({
     overviewJSX: function () {
         return (
             <div className="overview">
-                <p className="job-overview">
+                <p>
                     <strong>{this.state.program_version}</strong>{this.state.submitted_at
                         && `, query submitted on ${this.state.submitted_at}`}
                 </p>
-                <p className="job-overview">
+                <p>
                     <strong> Databases: </strong>{
                         this.state.querydb.map((db) => { return db.title; }).join(', ')
                     } ({this.state.stats.nsequences} sequences,&nbsp;
                     {this.state.stats.ncharacters} characters)
                 </p>
-                <p className="job-overview">
+                <p>
                     <strong>Parameters: </strong> {
                         _.map(this.state.params, function (val, key) {
                             return key + ' ' + val;
@@ -406,8 +406,8 @@ var Report = React.createClass({
             $this.on('mouseup mousemove', function handler(event) {
                 if (event.type === 'mouseup') {
                     // user wants to toggle
-                    var hitNumber = $this.data('hit-number');
-                    $(`div[data-parent-hit=${hitNumber}]`).toggle();
+                    var hitID = $this.parents('.hit').attr('id');
+                    $(`div[data-parent-hit=${hitID}]`).toggle();
                     $this.find('i').toggleClass('fa-minus-square-o fa-plus-square-o');
                 } else {
                     // user wants to select

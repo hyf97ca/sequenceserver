@@ -172,7 +172,7 @@ export default React.createClass({
         }
 
         return <div className="section-header">
-            <h4 data-hit-number={this.props.hit.number}>
+            <h4>
                 <div className="hit-header">
                     <i className="fa fa-minus-square-o"></i>&nbsp;
                 </div>
@@ -190,13 +190,14 @@ export default React.createClass({
     },
 
     contentJSX: function () {
-        return <div className="section-content" data-parent-hit={this.props.hit.number}>
+        return <div className="section-content" data-parent-hit={this.domID()}>
             { this.hitLinks() }
             <div className ="section-expansion">
                 {this.props.hit.uniqueString}
             </div>
             <HSPOverview key={'kablammo' + this.props.query.id} query={this.props.query}
                 hit={this.props.hit} algorithm={this.props.algorithm}
+                showHSPCrumbs={this.props.hit.hsps.length > 1}
                 collapsed={this.props.veryBig} />
         </div>;
     },
@@ -225,12 +226,12 @@ export default React.createClass({
                 </label>
                 {
                     btns.map((btn) => {
-                        return [<span className="line"> | </span>, this.button(btn)];
+                        return [<span className="line">|</span>, this.button(btn)];
                     })
                 }
                 {
                     this.props.hit.links.map((link) => {
-                        return [<span className="line"> | </span>, this.a(link)];
+                        return [<span className="line">|</span>, this.a(link)];
                     })
                 }
             </div>
@@ -306,14 +307,14 @@ export default React.createClass({
 
     button: function ({text, icon, title, className, onClick}) {
         if (onClick) {
-            return <button className={`btn btn-link ${className}`}
+            return <button className={`btn-link ${className}`}
                 title={title} onClick={onClick}><i className={`fa ${icon}`}></i> {text}
             </button>;
         }
         else {
-            return <button className="btn btn-link view-sequence disabled"
+            return <button className="btn-link view-sequence disabled"
                 title={title} disabled="true">
-                <i className={`fa ${icon}`}></i> text
+                <i className={`fa ${icon}`}></i> {text}
             </button>;
         }
     },
@@ -322,15 +323,13 @@ export default React.createClass({
      * Render URL for sequence-viewer.
      */
     a: function (link) {
-        if (link.title && link.url)
-        {
-            return (
-                <a href={link.url} className={link.class} target='_blank'>
-                    {link.icon && <i className={'fa ' + link.icon}></i>}
-                    {' ' + link.title + ' '}
-                </a>
-            );
-        }
-    },
+        if (!link.title || !link.url) return;
 
+        let className = 'btn btn-link';
+        if (link.class) className = `${className} ${link.class}`;
+        return <a href={link.url} className={className} target='_blank'>
+            {link.icon && <i className={'fa ' + link.icon}></i>}
+            {' ' + link.title + ' '}
+        </a>;
+    }
 });
