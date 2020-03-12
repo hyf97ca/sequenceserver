@@ -22,7 +22,8 @@ var Page = React.createClass({
                 {/* Provide bootstrap .container element inside the #view for
                     the Report component to render itself in. */}
                 <div className="container">
-                    <Report showSequenceModal={ _ => this.showSequenceModal(_) }
+                    <Report ref = "report"
+                        showSequenceModal={ _ => this.showSequenceModal(_) }
                         getCharacterWidth={ () => this.getCharacterWidth() } />
                 </div>
 
@@ -493,4 +494,4 @@ var Report = React.createClass({
     },
 });
 
-React.render(<Page/>, document.getElementById('view'));
+React.render(<Page ref={(sequenceserver) => {window.sequenceserver = sequenceserver}} />, document.getElementById('view'));

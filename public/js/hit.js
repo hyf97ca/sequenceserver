@@ -4,6 +4,7 @@ import _ from 'underscore';
 import HSPOverview from './kablammo';
 import downloadFASTA from './download_fasta';
 import AlignmentExporter from './alignment_exporter'; // to download textual alignment
+import {getRepresentative, getRepresented, getCluster, getClustered, export_txt, getPsytecID, getPsytecFASTA} from './t3se';
 
 /**
  * Component for each hit. Receives props from Report. Has no state.
@@ -62,6 +63,81 @@ export default React.createClass({
         aln_exporter.export_alignments(hsps, this.props.query.id+'_'+this.props.hit.id);
     },
 
+    representativeHelper: async function (event) {
+        var term = undefined;
+        if (this.props.hit.id.indexOf(":" > 0))
+        {
+            term = this.props.hit.id.split(":")[0];
+        }
+        else if(this.props.hit.id.indexOf("_" > 0))
+        {
+            term = this.props.hit.id;
+        }
+        else
+        {
+            //this.props.hit.id is a cluster, convert to psytec id
+            term = await getPsytecID(this.props.hit.id);
+        }
+
+        var representative = await getRepresentative(term);
+        var represented = await getRepresented(representative);
+        var string = "";
+        represented.forEach(element => 
+        {
+            string += element + "\n";
+        });
+        alert(string);
+        export_txt(string, "identical_"+representative);
+    },
+
+    clusterHelper: async function (event) {
+        var term = undefined;
+        if (this.props.hit.id.indexOf(":" > 0))
+        {
+            term = this.props.hit.id.split(":")[0];
+        }
+        else if(this.props.hit.id.indexOf("_" > 0))
+        {
+            term = this.props.hit.id;
+        }
+        else
+        {
+            //this.props.hit.id is a cluster, convert to psytec id
+            term = await getPsytecID(this.props.hit.id);
+        }
+
+        var cluster = await getCluster(term);
+        var clustered = await getClustered(cluster);
+        var string = "";
+        clustered.forEach(element => 
+        {
+            string += element + "\n";
+        });
+        alert(string);
+        export_txt(string, "clustered_"+cluster);
+    },
+
+    psytecFASTAHelper: async function (event) {
+        var term = undefined;
+        if (this.props.hit.id.indexOf(":" > 0))
+        {
+            term = this.props.hit.id.split(":")[0];
+        }
+        else if(this.props.hit.id.indexOf("_" > 0))
+        {
+            term = this.props.hit.id;
+        }
+        else
+        {
+            //this.props.hit.id is a cluster, convert to psytec id
+            term = await getPsytecID(this.props.hit.id);
+        }
+
+        var cluster = await getCluster(term);
+        var psytecFASTA = await getPsytecFASTA(cluster);
+        alert(psytecFASTA);
+        export_txt(psytecFASTA, "psytec_"+cluster);
+    },
 
     // Life cycle methods //
 
@@ -116,6 +192,9 @@ export default React.createClass({
     contentJSX: function () {
         return <div className="section-content" data-parent-hit={this.props.hit.number}>
             { this.hitLinks() }
+            <div className ="section-expansion">
+                {this.props.hit.uniqueString}
+            </div>
             <HSPOverview key={'kablammo' + this.props.query.id} query={this.props.query}
                 hit={this.props.hit} algorithm={this.props.algorithm}
                 collapsed={this.props.veryBig} />
@@ -127,7 +206,10 @@ export default React.createClass({
         if (!this.props.imported_xml) {
             btns = btns.concat([
                 this.viewSequenceButton(),
-                this.downloadFASTAButton()
+                this.downloadFASTAButton(),
+                this.representativesButton(),
+                this.clusterButton(),
+                this.psytecButton()
             ]);
         }
         btns.push(this.downloadAlignmentButton());
@@ -193,6 +275,34 @@ export default React.createClass({
             onClick: () => this.downloadAlignment()
         };
     },
+
+    representativesButton: function () {
+        return {
+            text: 'Identical',
+            icon: 'fa-download',
+            className: 'representatives-fa',
+            onClick: () => this.representativeHelper()
+        };
+    },
+
+    clusterButton: function () {
+        return {
+            text: 'Cluster',
+            icon: 'fa-download',
+            className: 'clustered-fa',
+            onClick: () => this.clusterHelper()
+        };
+    },
+
+    psytecButton: function () {
+        return {
+            text: 'PsyTEC',
+            icon: 'fa-download',
+            className: 'representatives-fa',
+            onClick: () => this.psytecFASTAHelper()
+        };
+    },
+
 
     button: function ({text, icon, title, className, onClick}) {
         if (onClick) {
