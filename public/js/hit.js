@@ -65,78 +65,100 @@ export default React.createClass({
 
     representativeHelper: async function (event) {
         var term = undefined;
-        if (this.props.hit.id.indexOf(":" > 0))
+        if (this.props.hit.id.indexOf(":") > 0)
         {
+            console.log("id with : detected", this.props.hit.id);
             term = this.props.hit.id.split(":")[0];
         }
-        else if(this.props.hit.id.indexOf("_" > 0))
+        else if(this.props.hit.id.indexOf("_") > 0)
         {
+            console.log("id detected", this.props.hit.id);
             term = this.props.hit.id;
         }
         else
         {
             //this.props.hit.id is a cluster, convert to psytec id
+            console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
-
+        var is_nuc = this.props.querydb.type !== "protein";
         var representative = await getRepresentative(term);
-        var represented = await getRepresented(representative);
+        var represented = await getRepresented(representative, is_nuc);
         var string = "";
-        represented.forEach(element => 
+        represented[0].forEach(element => 
         {
             string += element + "\n";
         });
+        var text = "";
+        for (var i = 0; i < represented[0].length; i++)
+        {
+            text += ">" + represented[0][i] + "\n" + represented[1][i] + "\n";
+        }
         alert(string);
-        export_txt(string, "identical_"+representative);
+        export_txt(text, "identical_"+representative);
     },
 
     clusterHelper: async function (event) {
         var term = undefined;
-        if (this.props.hit.id.indexOf(":" > 0))
+        if (this.props.hit.id.indexOf(":") > 0)
         {
+            console.log("id with : detected", this.props.hit.id);
             term = this.props.hit.id.split(":")[0];
         }
-        else if(this.props.hit.id.indexOf("_" > 0))
+        else if(this.props.hit.id.indexOf("_") > 0)
         {
+            console.log("id detected", this.props.hit.id);
             term = this.props.hit.id;
         }
         else
         {
             //this.props.hit.id is a cluster, convert to psytec id
+            console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
-
+        var is_nuc = this.props.querydb.type !== "protein";
         var cluster = await getCluster(term);
-        var clustered = await getClustered(cluster);
+        var clustered = await getClustered(cluster, is_nuc);
         var string = "";
-        clustered.forEach(element => 
+        clustered[0].forEach(element => 
         {
             string += element + "\n";
         });
+        var text = "";
+        for (var i = 0; i < clustered[0].length; i++)
+        {
+            text += ">" + clustered[0][i] + "\n" + clustered[1][i] + "\n";
+        }
         alert(string);
-        export_txt(string, "clustered_"+cluster);
+        export_txt(text, "clustered_"+cluster);
     },
 
     psytecFASTAHelper: async function (event) {
         var term = undefined;
-        if (this.props.hit.id.indexOf(":" > 0))
+        if (this.props.hit.id.indexOf(":") > 0)
         {
+            console.log("id with : detected", this.props.hit.id);
             term = this.props.hit.id.split(":")[0];
         }
-        else if(this.props.hit.id.indexOf("_" > 0))
+        else if(this.props.hit.id.indexOf("_") > 0)
         {
+            console.log("id detected", this.props.hit.id);
             term = this.props.hit.id;
         }
         else
         {
             //this.props.hit.id is a cluster, convert to psytec id
+            console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
-
         var cluster = await getCluster(term);
-        var psytecFASTA = await getPsytecFASTA(cluster);
-        alert(psytecFASTA);
-        export_txt(psytecFASTA, "psytec_"+cluster);
+        var is_nuc = this.props.querydb[0].type !== "protein";
+        var is_syn = false;
+        if (is_nuc)
+            is_syn = confirm('Do you want PsyTEC synthesized sequences?');
+        var psytecFASTA = await getPsytecFASTA(cluster, is_nuc, is_syn);
+        alert(psytecFASTA[0]);
+        export_txt(psytecFASTA[1], "psytec_"+cluster);
     },
 
     // Life cycle methods //

@@ -13,7 +13,7 @@ function getRepresentative(effector_id) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            url: "http://localhost:3000/effectors?id=eq."+ effector_id +"&select=representative",//"http://localhost:3000/effectors?id=eq.PttICMP4388_AvrE1e_1&select=representative",
+            url: "https://hopper.csb.utoronto.ca:8774/effectors?id=eq."+ effector_id +"&select=representative",//"https://hopper.csb.utoronto.ca:8774/effectors?id=eq.PttICMP4388_AvrE1e_1&select=representative",
             dataType: 'json',
             success:function(data) {
                 console.log(this.url, data);
@@ -28,20 +28,25 @@ function getRepresentative(effector_id) {
     });  
 }
 
-function getRepresented(representative_id) {
+function getRepresented(representative_id, is_nuc) {
+    var column = "aa_sequence"
+    if (is_nuc != undefined && is_nuc === true)
+        column = "dna_sequence"
     return new Promise((resolve, reject) => {
         $.ajax({
             type:'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            url: "http://localhost:3000/effectors?representative=eq." + representative_id + "&select=id",
+            url: "https://hopper.csb.utoronto.ca:8774/effectors?representative=eq." + representative_id + "&select=id," + column,
             dataType: 'json',
             success:function(data) {
                 console.log(this.url, data);
                 represented = [];
+                sequences = [];
                 data.forEach(element => represented.push(element['id']));
-                resolve(represented);
+                data.forEach(element => sequences.push(element[column]));
+                resolve([represented, sequences]);
             },
             contentType: false,//'text/plain',
             fail:function() {
@@ -59,7 +64,7 @@ function getCluster(effector_id) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            url: "http://localhost:3000/effectors?id=eq."+ effector_id +"&select=cluster",//"http://localhost:3000/effectors?id=eq.PttICMP4388_AvrE1e_1&select=representative",
+            url: "https://hopper.csb.utoronto.ca:8774/effectors?id=eq."+ effector_id +"&select=cluster",//"https://hopper.csb.utoronto.ca:8774/effectors?id=eq.PttICMP4388_AvrE1e_1&select=representative",
             dataType: 'json',
             success:function(data) {
                 console.log(this.url, data);
@@ -74,20 +79,25 @@ function getCluster(effector_id) {
     });  
 }
 
-function getClustered(cluster) {
+function getClustered(cluster, is_nuc) {
+    var column = "aa_sequence"
+    if (is_nuc != undefined && is_nuc === true)
+        column = "dna_sequence"
     return new Promise((resolve, reject) => {
         $.ajax({
             type:'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            url: "http://localhost:3000/effectors?cluster=eq." + cluster + "&select=id",
+            url: "https://hopper.csb.utoronto.ca:8774/effectors?cluster=eq." + cluster + "&select=id," + column,
             dataType: 'json',
             success:function(data) {
                 console.log(this.url, data);
                 clustered = [];
+                sequences = [];
                 data.forEach(element => clustered.push(element['id']));
-                resolve(clustered);
+                data.forEach(element => sequences.push(element[column]));
+                resolve([clustered, sequences]);
             },
             contentType: false,//'text/plain',
             fail:function() {
@@ -105,7 +115,7 @@ function getPsytecID(cluster){
             headers: {
                 'Content-Type': 'application/json',
             },
-            url: "http://localhost:3000/psytec?cluster=eq." + cluster + "&select=id,",
+            url: "https://hopper.csb.utoronto.ca:8774/psytec?cluster=eq." + cluster + "&select=id",
             dataType: 'json',
             success:function(data) {
                 resolve(data[0]['id']);
@@ -119,24 +129,30 @@ function getPsytecID(cluster){
     });  
 }
 
-function getPsytecFASTA(cluster, is_nuc){
+function getPsytecFASTA(cluster, is_nuc, is_syn){
     var column = "aa_sequence"
     if (is_nuc != undefined && is_nuc === true)
-        column = "dna_sequence"
+    {
+        if (is_syn != undefined && is_syn === true)
+            column = "syn_sequence"
+        else
+            column = "dna_sequence"
+    }
+        
     return new Promise((resolve, reject) => {
         $.ajax({
             type:'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            url: "http://localhost:3000/psytec?cluster=eq." + cluster + "&select=id," + column,
+            url: "https://hopper.csb.utoronto.ca:8774/psytec?cluster=eq." + cluster + "&select=id," + column,
             dataType: 'json',
             success:function(data) {
                 console.log(this.url, data);
                 var id = data[0]['id'];
                 var seq = data[0][column];
                 var txt = ">" + id + "\n" + seq;
-                resolve(txt);
+                resolve([id, txt]);
             },
             contentType: false,//'text/plain',
             fail:function() {
