@@ -19,6 +19,18 @@ export function download_blob(blob, filename) {
     download_url(window.URL.createObjectURL(blob), filename);
 }
 
+export function open_blob(blob) {
+    if (typeof window.navigator.msSaveOrOpenBlob !== 'undefined') {
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+        return;
+    }
+    let url = URL.createObjectURL(blob);
+    window.open(url);
+    setTimeout(function() {
+        URL.revokeObjectURL(url);
+    }, 100);
+}
+
 export function sanitize_filename(str) {
     var san = str.replace(/[^a-zA-Z0-9=_\-]/g, '_');
     // Replace runs of underscores with single one.

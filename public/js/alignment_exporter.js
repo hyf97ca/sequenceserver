@@ -39,8 +39,9 @@ export default class AlignmentExporter {
         var blob = new Blob([fasta], { type: 'text/fasta' });
         // var filename_prefix = query_def + '_' + subject_def;
         // var filename_prefix = query_id + '_' + subject_id;
-        var filename = Exporter.sanitize_filename(filename_prefix) + '.txt';
-        Exporter.download_blob(blob, filename);
+        //var filename = Exporter.sanitize_filename(filename_prefix) + '.txt';
+        //Exporter.download_blob(blob, filename);
+        Exporter.open_blob(blob);
     }
 
     export_alignments_of_all(hsps, name) {

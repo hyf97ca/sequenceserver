@@ -175,17 +175,10 @@ function getPsytecFASTA(cluster, is_nuc, is_syn){
 function export_txt(txt, filename_prefix) {
 
     var blob = new Blob([txt], { type: 'text/plain'});
-    var filename = Exporter.sanitize_filename(filename_prefix) + '.txt';
+    //var filename = Exporter.sanitize_filename(filename_prefix) + '.txt';
     
-    if (typeof window.navigator.msSaveOrOpenBlob !== 'undefined') {
-        window.navigator.msSaveOrOpenBlob(blob, filename);
-        return;
-    }
-    let url = URL.createObjectURL(blob)
-    window.open(url);
-    setTimeout(function() {
-        URL.revokeObjectURL(url);
-    }, 100);
+    //Exporter.download_blob(blob, filename);
+    Exporter.open_blob(blob);
 }
 
 export {getRepresented, getRepresentative, getCluster, getClustered, getPsytecID, getPsytecFASTA, export_txt};

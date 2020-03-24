@@ -67,18 +67,18 @@ export default React.createClass({
         var term = undefined;
         if (this.props.hit.id.indexOf(":") > 0)
         {
-            console.log("id with : detected", this.props.hit.id);
+            //console.log("id with : detected", this.props.hit.id);
             term = this.props.hit.id.split(":")[0];
         }
         else if(this.props.hit.id.indexOf("_") > 0)
         {
-            console.log("id detected", this.props.hit.id);
+            //console.log("id detected", this.props.hit.id);
             term = this.props.hit.id;
         }
         else
         {
             //this.props.hit.id is a cluster, convert to psytec id
-            console.log("cluster detected", this.props.hit.id);
+            //console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
         var is_nuc = this.props.querydb.type !== "protein";
@@ -102,18 +102,18 @@ export default React.createClass({
         var term = undefined;
         if (this.props.hit.id.indexOf(":") > 0)
         {
-            console.log("id with : detected", this.props.hit.id);
+            //console.log("id with : detected", this.props.hit.id);
             term = this.props.hit.id.split(":")[0];
         }
         else if(this.props.hit.id.indexOf("_") > 0)
         {
-            console.log("id detected", this.props.hit.id);
+            //console.log("id detected", this.props.hit.id);
             term = this.props.hit.id;
         }
         else
         {
             //this.props.hit.id is a cluster, convert to psytec id
-            console.log("cluster detected", this.props.hit.id);
+            //console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
         var is_nuc = this.props.querydb.type !== "protein";
@@ -137,12 +137,12 @@ export default React.createClass({
         var term = undefined;
         if (this.props.hit.id.indexOf(":") > 0)
         {
-            console.log("id with : detected", this.props.hit.id);
+            //console.log("id with : detected", this.props.hit.id);
             term = this.props.hit.id.split(":")[0];
         }
         else if(this.props.hit.id.indexOf("_") > 0)
         {
-            console.log("id detected", this.props.hit.id);
+            //console.log("id detected", this.props.hit.id);
             term = this.props.hit.id;
         }
         else
