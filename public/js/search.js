@@ -763,11 +763,11 @@ var Databases = React.createClass({
             this.handleClick(this.databases()[0]);
         }
 
-        if (this.props.preSelectedDbs) {
-            var selectors = this.props.preSelectedDbs.map(db => `input[value=${db.id}]`);
-            $(...selectors).prop('checked',true);
-            setTimeout(() => this.handleClick(this.props.preSelectedDbs[0]));
-        }
+        // if (this.props.preSelectedDbs) {
+        //     var selectors = this.props.preSelectedDbs.map(db => `input[value=${db.id}]`);
+        //     $(...selectors).prop('checked',true);
+        //     setTimeout(() => this.handleClick(this.props.preSelectedDbs[0]));
+        // }
         this.props.onDatabaseTypeChanged(this.state.type);
     }
 });
