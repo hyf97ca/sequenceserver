@@ -176,7 +176,16 @@ function export_txt(txt, filename_prefix) {
 
     var blob = new Blob([txt], { type: 'text/plain'});
     var filename = Exporter.sanitize_filename(filename_prefix) + '.txt';
-    Exporter.download_blob(blob, filename);
+    
+    if (typeof window.navigator.msSaveOrOpenBlob !== 'undefined') {
+        window.navigator.msSaveOrOpenBlob(blob, filename);
+        return;
+    }
+    let url = URL.createObjectURL(blob)
+    window.open(url);
+    setTimeout(function() {
+        URL.revokeObjectURL(url);
+    }, 100);
 }
 
 export {getRepresented, getRepresentative, getCluster, getClustered, getPsytecID, getPsytecFASTA, export_txt};
