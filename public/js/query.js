@@ -51,10 +51,8 @@ export default React.createClass({
         }
         return <div className="section-header">
             <h3>
-                <strong>
-                Query= {this.props.query.id}&nbsp;
-                    <small>{this.props.query.title}</small>
-                </strong>
+                <strong>Query=&nbsp;{this.props.query.id}</strong>&nbsp;
+                {this.props.query.title}
             </h3>
             <span className="label label-reset pos-label">{ meta }</span>
         </div>;
@@ -70,9 +68,7 @@ export default React.createClass({
 
     noHitsJSX: function () {
         return <div className="section-content">
-            <p>
-                <strong> ****** No hits found ****** </strong>
-            </p>
+            <strong> ****** No hits found ****** </strong>
         </div>;
     },
 
@@ -105,7 +101,7 @@ var HitsTable = React.createClass({
             <div className="table-hit-overview">
                 <h4 className="caption" data-toggle="collapse" data-target={'#Query_'+this.props.query.number+'HT_'+this.props.query.number}>
                     <i className="fa fa-minus-square-o"></i>&nbsp;
-                    <span> Summary table of hits</span>
+                    <span>Summary table of hits</span>
                 </h4>
                 <div className="collapsed in"id={'Query_'+ this.props.query.number + 'HT_'+ this.props.query.number}>
                     <table

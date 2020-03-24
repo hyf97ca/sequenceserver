@@ -222,7 +222,7 @@ var Report = React.createClass({
                     results.push(
                         <HSP key={'Query_'+query.number+'_Hit_'+hit.number+'_HSP_'+hsp.number}
                             query={query} hit={hit} hsp={hsp} algorithm={this.state.program}
-                            showHSPCrumbs={hit.hsps.length > 1} {... this.props} />
+                            showHSPNumbers={hit.hsps.length > 1} {... this.props} />
                     );
                     numHSPsProcessed++;
                     if (numHSPsProcessed == this.maxHSPs) break;
@@ -469,12 +469,14 @@ var Report = React.createClass({
         // Highlight selected hit and enable 'Download FASTA/Alignment of
         // selected' links.
         if (checkbox.is(':checked')) {
-            $hit.find('.section-content').addClass('glow');
-            $('.download-alignment-of-selected').enable();
+            $hit.addClass('glow');
+            $hit.next('.hsp').addClass('glow');
             $('.download-fasta-of-selected').enable();
+            $('.download-alignment-of-selected').enable();
         }
         else {
-            $hit.find('.section-content').removeClass('glow');
+            $hit.removeClass('glow');
+            $hit.next('.hsp').removeClass('glow');
         }
 
         if (num_checked >= 1)

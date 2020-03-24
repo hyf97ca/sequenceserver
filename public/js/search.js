@@ -697,7 +697,7 @@ var Databases = React.createClass({
 
         // Toggle button.
         var toggleState = '[Select all]';
-        var toggleClass = 'btn btn-link';
+        var toggleClass = 'btn-link';
         var toggleShown = this.databases(category).length > 1 ;
         var toggleDisabled = this.state.type && this.state.type !== category;
         if (toggleShown && toggleDisabled) toggleClass += ' disabled';
