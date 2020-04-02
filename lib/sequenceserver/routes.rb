@@ -11,6 +11,10 @@ require 'sequenceserver/sequence'
 module SequenceServer
   # Controller.
   class Routes < Sinatra::Base
+
+    extend Forwardable
+    def_delegators SequenceServer, :config, :sys
+
     # See
     # http://www.sinatrarb.com/configuration.html
     configure do
@@ -33,6 +37,7 @@ module SequenceServer
     # http://www.sinatrarb.com/intro.html#Mime%20Types
     configure do
       mime_type :fasta, 'text/fasta'
+      mime_type :nwk,   'text/plain'
       mime_type :xml,   'text/xml'
       mime_type :tsv,   'text/tsv'
     end
@@ -138,6 +143,19 @@ module SequenceServer
       job = Job.fetch(jid)
       out = BLAST::Formatter.new(job, type)
       send_file out.file, filename: out.filename, type: out.mime
+    end
+    
+    # Download BLAST report in various formats.
+    get '/generateTree/:jid.:type' do |jid, cluster|
+      filename = cluster + "_p.nwk"
+      tree_path = File.join(DOTDIR, jid, filename)
+      if !File.exist?(tree_path)
+        command = "./tree.sh #{cluster} #{jid}"
+        sys(command, path: config[:bin], dir: DOTDIR)
+      end
+      send_file(tree_path,
+      type:     :nwk,
+      filename: filename)
     end
 
     # Catches any exception raised within the app and returns JSON
