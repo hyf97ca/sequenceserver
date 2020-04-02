@@ -156,7 +156,8 @@ module SequenceServer
       # end
       send_file(tree_path,
       type:     :nwk,
-      filename: filename)
+      filename: filename,
+      disposition: 'inline')
     end
 
     # Catches any exception raised within the app and returns JSON
