@@ -151,7 +151,7 @@ module SequenceServer
       tree_path = File.join(DOTDIR, jid, filename)
       if !File.exist?(tree_path)
         command = "./tree.sh #{cluster} #{jid}"
-        sys(command, path: config[:bin], dir: DOTDIR stdout: '/dev/null')
+        sys(command, path: config[:bin], dir: DOTDIR, stdout: '/dev/null')
       end
       send_file(tree_path,
       type:     :nwk,
