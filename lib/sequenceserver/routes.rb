@@ -149,9 +149,10 @@ module SequenceServer
     get '/generateTree/:jid.:type' do |jid, cluster|
       filename = cluster + "_p.nwk"
       tree_path = File.join(DOTDIR, jid, filename)
+      out_path = File.join(DOTDIR, jid, cluster + '.stdout')
       if !File.exist?(tree_path)
         command = "./tree.sh #{cluster} #{jid}"
-        sys(command, path: config[:bin], dir: DOTDIR, stdout: '/dev/null')
+        sys(command, path: config[:bin], dir: DOTDIR, stdout: out_path)
       end
       send_file(tree_path,
       type:     :nwk,
