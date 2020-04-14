@@ -81,9 +81,10 @@ export default React.createClass({
             //console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
-        var is_nuc = this.props.querydb.type !== "protein";
+        var is_nuc = this.props.querydb[0].type !== "protein";
         var representative = await getRepresentative(term);
         var represented = await getRepresented(representative, is_nuc);
+        console.log("is nuc:", is_nuc, "type:", this.props.querydb.type);
         var string = "";
         represented[0].forEach(element => 
         {
@@ -116,9 +117,10 @@ export default React.createClass({
             //console.log("cluster detected", this.props.hit.id);
             term = await getPsytecID(this.props.hit.id);
         }
-        var is_nuc = this.props.querydb.type !== "protein";
+        var is_nuc = this.props.querydb[0].type !== "protein";
         var cluster = await getCluster(term);
         var clustered = await getClustered(cluster, is_nuc);
+        console.log("is nuc:", is_nuc);
         var string = "";
         clustered[0].forEach(element => 
         {
