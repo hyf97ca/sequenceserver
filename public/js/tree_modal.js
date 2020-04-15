@@ -105,7 +105,7 @@ export default class TreeModal extends React.Component {
     }
 
     viewTree() {
-        var nwk_url = "https://https://icytree.org/?url=hopper.csb.utoronto.ca/generateTree/" + this.state.search_id + ".";
+        var nwk_url = "https://icytree.org/?url=hopper.csb.utoronto.ca/generateTree/" + this.state.search_id + ".";
 
         if (!this.isSelected)
             return false;
