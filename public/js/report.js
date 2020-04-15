@@ -9,6 +9,7 @@ import Hit from './hit';
 import HSP from './hsp';
 
 import SequenceModal from './sequence_modal';
+import TreeModal from './tree_modal';
 import showErrorModal from './error_modal';
 
 /**
@@ -24,6 +25,7 @@ var Page = React.createClass({
                 <div className="container">
                     <Report ref = "report"
                         showSequenceModal={ _ => this.showSequenceModal(_) }
+                        showTreeModal={ _ => this.showTreeModal(_) }
                         getCharacterWidth={ () => this.getCharacterWidth() } />
                 </div>
 
@@ -36,6 +38,7 @@ var Page = React.createClass({
                 <canvas id="png-exporter" hidden></canvas>
 
                 <SequenceModal ref="sequenceModal" />
+                <TreeModal ref="treeModal" />
             </div>
         );
     },
@@ -48,6 +51,11 @@ var Page = React.createClass({
     showSequenceModal: function (url) {
         this.refs.sequenceModal.show(url);
     },
+
+    showTreeModal: function (jid) {
+        this.refs.treeModal.show(jid);
+    },
+
 
     getCharacterWidth: function () {
         if (!this.characterWidth) {
@@ -297,7 +305,8 @@ var Report = React.createClass({
                 { this.shouldShowSidebar() &&
                     (
                         <div className="col-md-3 hidden-sm hidden-xs">
-                            <Sidebar data={this.state} shouldShowIndex={this.shouldShowIndex()}/>
+                            <Sidebar data={this.state} shouldShowIndex={this.shouldShowIndex()}
+                            showTreeModal={ (_) => this.props.showTreeModal(_) }/>
                         </div>
                     )
                 }

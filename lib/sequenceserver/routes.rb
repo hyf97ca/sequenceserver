@@ -151,14 +151,19 @@ module SequenceServer
       filename = cluster + "_p.nwk"
       tree_path = File.join(DOTDIR, jid, filename)
       out_path = File.join(DOTDIR, jid, 'calls')
-      # if !File.exist?(tree_path)
-        command = "tree.sh #{cluster} #{jid}"
+      if !File.exist?(tree_path)
+        cluster_space = cluster.gsub("_", " ")
+        command = "tree.sh #{jid} #{cluster_space}"
         sys(command, path: config[:bin], dir: File.join(DOTDIR, jid))
-      # end
+      end
       send_file(tree_path,
       type:     :nwk,
       filename: filename,
       disposition: 'inline')
+    end
+
+    get '/help/' do
+      erb :help, layout: false
     end
 
     # Catches any exception raised within the app and returns JSON

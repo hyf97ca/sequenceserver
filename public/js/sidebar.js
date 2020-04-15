@@ -202,6 +202,14 @@ export default React.createClass({
                             </a>
                         </li>
                     }
+                    {
+                        (this.props.data.program == "blastp" || this.props.data.program == "tblastn")  && <li>
+                            <button className="btn-link download" data-toggle="tooltip"
+                                title="Generate a tree" onClick={() => this.props.showTreeModal(this.props.data.search_id)}>
+                                    Generate a tree
+                            </button>
+                        </li>
+                    }
                 </ul>
             </div>
         );
