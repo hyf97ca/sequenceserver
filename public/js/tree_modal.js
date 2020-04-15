@@ -27,9 +27,15 @@ export default class TreeModal extends React.Component {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h3>View tree</h3>
-                            Select effector families to run progressive alignments to generate a tree.
+                            <h3>Tree Generator and Viewer</h3>
+                            Select effector families to run progressive alignments, generate a tree, and view it in your browser.
                             Selecting a lot of families has the potential to take VERY long to generate the tree.
+                            ANY job sent to the server WILL be run to completion server-side. Please be patient.
+                            Sending many tree generation requests with many effector families selected in quick succession will cause the server to be very slow/crash.
+                            There are no limits in place currently, but if this proves to be a problem long jobs will be disallowed.
+                            IcyTree may timeout if you select many effector families and try to view the tree.
+                            In this case, it is recommended that you click Generate Tree first, wait for it to finish, and then click View Tree.
+                            If you get a 404 error try refreshing the page.
                         </div>
 
                         { this.resultsJSX() }
