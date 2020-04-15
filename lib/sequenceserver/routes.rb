@@ -149,13 +149,16 @@ module SequenceServer
     # Download BLAST report in various formats.
     get '/generateTree/:jid.:cluster' do |jid, cluster|
       filename = cluster + "_p.nwk"
+      first_aln = cluster.split("_")[0]
+      started_filename = first_aln + "_p.log"
       tree_path = File.join(DOTDIR, jid, filename)
-      out_path = File.join(DOTDIR, jid, 'calls')
-      if !File.exist?(tree_path)
+      out_path = File.join(DOTDIR, jid, started_filename)
+      if !File.exist?(out_path)
         cluster_space = cluster.gsub("_", " ")
         command = "tree.sh #{jid} #{cluster_space}"
         sys(command, path: config[:bin], dir: File.join(DOTDIR, jid))
       end
+      halt 202 unless File.exist?(tree_path)
       send_file(tree_path,
       type:     :nwk,
       filename: filename,
